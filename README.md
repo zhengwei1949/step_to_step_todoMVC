@@ -16,6 +16,30 @@
 - 根据双向数据绑定的原理，看到列表，我们要能想到的是数组 --> 观察页面上的数据，自己想一下应该如何构造出来这个列表 --> 任务有名字、有是否完成 --> {name:'xxx',completed:true} --> 为了以后便于在数据库中存，我们多加一个属性id(这块想不到没关系，我们真实的数据一般的是后台给我们的) --> 把数据通过ng-repeat展示出来
 ### 关键代码：
 
+```javascript
+$scope.todos = [
+    {id:1,name:'吃饭',completed:true},
+    {id:2,name:'睡觉',completed:true},
+    {id:3,name:'打豆豆',completed:false},
+    {id:4,name:'学习',completed:true},
+    {id:5,name:'喝水',completed:false}
+];
+```
+这块有的同学会有疑问，为什么一定要id,这个从二方面来说明，第一方面，我们其实不加id是可以的，我们可以考虑用$index来替代，另一方面，我们加了id有一个好处，大家如果看过mysql数据库里面的数据就知道，一般一条数据记录都会带有一个id的，这样写是为了后面更容易和后台进行对接
+
+
+```html
+<li ng-repeat="item in todos">
+    <div class="view">
+        <input class="toggle" type="checkbox">
+        <label>{{item.name}}</label>
+        <button class="destroy"></button>
+    </div>
+    <input class="edit" value="Rule the web">
+</li>
+
+```
+
 ## 任务添加 
 - 分析需求：当我们按住回车的时候，会发现数据添加到了列表当中 
     1. 如何确定啥时候我们按住了回车 --> 方式一：用事件对象 方式二：用ng-submit(利用了表单提交的特性)
@@ -25,7 +49,34 @@
     2. bug2:当新任务的表单控件是空的情况下，仍然可以按回车
 
 ### 关键代码：
+```html
+<form ng-submit="add()">
+    <input ng-model="newTodo" class="new-todo" placeholder="What needs to be done?" autofocus>
+</form>
+```
 
+```javascript
+$scope.newTodo=''  // ng-model
+    $scope.add = function(){
+      // 判断newTodo是否为空，为空则不添加任务
+      if(!$scope.newTodo){
+        return
+      }
+
+      // 把新任务添加到$scope.todos中去
+      $scope.todos.push({
+        id:Math.random(),
+        name:$scope.newTodo,
+        completed:false
+      })
+      // 置空
+      $scope.newTodo=''
+    }
+
+```
+
+### 补充
+- 大家可以考虑使用事件对象($event --> keyCode的值是13的时候意味着你点击的是回车) --> 来实现这个功能
 
 ## 删除任务
 - 分析需求：当我们点击每一项的x的时候，就会把当前的删除掉
