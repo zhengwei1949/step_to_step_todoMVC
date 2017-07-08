@@ -345,5 +345,78 @@ myApp.controller('myController',['$scope','$location',function($scope,$location)
 ```
 
 ## 提取控制器的代码到service
+见《补充代码/理解service》
 
-### 关键代码：
+## 抽取获取数据及添加数据功能
+- 注意：我们当前的代码写到这个程度其实已经可以了，下面的所谓的提取到service只不过是为了让我们熟悉和了解service这个概念
+- 提取到服务的原则
+    + 哪些东西可以被复用?
+    + 当前的项目中涉及到的数据来自哪里? --> localStorage --> 对localStorage的在任何控制器里面都可以使用 --> 把对localStorage中的数据的各种操作提取出来
+
+### 关键代码
+```html
+<script src="./libs/angular.js"></script>
+<script src="./js/service.js"></script>
+<script src="js/app.js"></script>
+```    
+
+```javascript
+(function(angular){
+  
+  // 1.创建服务模块
+  var app = angular.module('service',[])
+
+  // 2.创建服务
+  // 第一个参数：服务的名字
+  // 第二个参数里的function: 
+  //    angular会把这个function当作构建函数，angular会帮助我们new这个构建函数，然后得到一个对象。A,B
+  app.service('MyService', ['$window',function($window){
+    // console.log($window === window);
+    var str = $window.localStorage.getItem('mytodos')|| '[]'
+    var todos  = JSON.parse(str);
+
+    // 1.返回任务数据
+    this.get = function(){
+      return todos
+    }
+
+    // 2.添加数据
+    this.add = function(newTodo){
+       // 把新任务添加到todos中去
+      todos.push({
+        id:Math.random(),
+        name:newTodo,
+        completed:false
+      })
+      
+      var str = JSON.stringify(todos);
+      $window.localStorage.setItem('mytodos',str);
+    }
+    
+  }])
+})(angular)
+```
+
+```javascript
+ar myApp = angular.module('myApp',['service']);
+	myApp.controller('myController',['$scope','$location','MyService',function($scope,$location,MyService){
+		//要展示的任务数据
+		$scope.todos = MyService.get();
+
+		//添加任务
+		$scope.newTodo=''  // ng-model
+		$scope.add = function(){
+			// 判断newTodo是否为空，为空则不添加任务
+			if(!$scope.newTodo){
+				return
+			}
+
+			// 把新任务添加到$scope.todos中去
+			MyService.add($scope.newTodo);
+			
+			// 置空
+			$scope.newTodo=''
+		}
+```
+
+
