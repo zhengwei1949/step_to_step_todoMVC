@@ -153,12 +153,41 @@ $scope.save = function(){
     3. 刚好input[type="checkbox"]的值也是true和false,所以，我们直接让checkbox和右侧的label对应的类名是一个数据模型
 
 ### 关键代码：
+```html
+<li ng-repeat="item in todos" ng-class="{editing:isEditingId == item.id,completed:item.completed}">
+    <div class="view">
+        <input class="toggle" type="checkbox" ng-model="item.completed">
+        <label ng-dblclick="edit(item.id)">{{item.name}}</label>
+        <button class="destroy" ng-click="remove(item.id)"></button>
+    </div>
+    <form ng-submit="save()">
+        <input class="edit" value="Rule the web" ng-model="item.name">
+    </form>
+</li>
+```
 
 ## 批量切换任务状态
 - 当点击最上面的checkbox的时候，所有的任务批量切换已完成和未完成的状态
     1. checkbox对应的ng-model的值是true或false
     2. 下面所有的任务只要改变item.completed的值都是true或false则实现效果
     3. 所以，我们考虑给最上面的checkbox添加一个事件(ng-change,当值变化的时候触发),当触发的时候，我们对数据模型中的数组做一个遍历，让每一项的值都同步为true或false
+
+### 关键代码
+```html
+<input class="toggle-all" type="checkbox" ng-change="toggleAll()"
+				ng-model="selectAll">
+```
+
+```javascript
+$scope.selectAll = false
+$scope.toggleAll = function(){
+    // 让$scope.todos中所有数据的completed值等于$scope.selectAll
+    for (var i = 0; i < $scope.todos.length; i++) {
+    var item = $scope.todos[i]
+    item.completed = $scope.selectAll
+    }
+}
+```
 
 ## 显示未完成任务数
 ### 见代码《加法计算器实现的N种方法》的分析，理解：如果一个表达式是由多个别的数据模型或者是某个函数(返回值由多个别的数据模型运算结果运算而来)的返回值的话，当这些多个别的数据模型的值发生变化的时候，也会重新刷新一下当前这个表达式的值
