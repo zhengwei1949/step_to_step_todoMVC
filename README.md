@@ -421,3 +421,6 @@ ar myApp = angular.module('myApp',['service']);
 
 ## 抽取删除数据及批量切换任务状态功能
 
+## 其他版本的todoMVC
+- [vue版](https://github.com/zhengwei1949/todomvc_es6)
+- [vue版](https://github.com/zhengwei1949/todomvc)
