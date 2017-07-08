@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body ng-app="myApp" ng-controller="myController">
+    <input type="text" ng-keyup="fn($event)">
+    <script src="./libs/angular.js"></script>
+    <script>
+        var myApp = angular.module('myApp',[]);
+        myApp.controller('myController',['$scope',function($scope){
+            $scope.fn = function(e){
+                console.log(e);
+                console.log(e.keyCode);
+                console.log('=================');
+            }
+        }]);
+    </script>
+</body>
+</html>
