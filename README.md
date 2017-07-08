@@ -243,9 +243,49 @@ $scope.clearAll = function(){
 ## filter过滤器的使用(只讲数组过滤数据中的模糊匹配和精确匹配)
 见《补充代码/filter过滤器的使用》
 
+### 关键代码：
+```html
+<li ng-repeat="item in todos | filter : isCompleted" ng-class="{editing:isEditingId == item.id,completed:item.completed}">
+```
+
+```javascript
+//切换不同状态任务的显示
+$scope.isCompleted = {};//filter过滤器的过滤条件
+//显示未完成的任务
+$scope.active = function(){
+    $scope.isCompleted = {completed:false}
+}
+
+// 显示已完成任务
+$scope.completed = function(){
+    $scope.isCompleted = {completed:true}
+}
+
+//显示所有的任务
+$scope.all = function(){
+    $scope.isCompleted = {}
+}
+```
+
 ## 切换不同状态焦点状态样式的操作
+1. 点击显示已完成的任务，当前有selected类名样式，其他二个没有
+2. 一说到样式，我们会想起来ng-class
+3. 我们必须在ng-class里面构造出来一个布尔值
 
 ### 关键代码：
+```html
+<ul class="filters">
+    <li>
+        <a ng-class="{selected:isCompleted.completed==undefined}" href="#/" ng-click="all()">All</a>
+    </li>
+    <li>
+        <a ng-class="{selected:isCompleted.completed==false}" href="#/active" ng-click="active()">Active</a>
+    </li>
+    <li>
+        <a ng-class="{selected:isCompleted.completed==true}" href="#/completed" ng-click="completed()">Completed</a>
+    </li>
+</ul>
+```
 
 ## 通过$watch监视锚点值的变化来切换不同状态任务的显示与否
 
