@@ -1,0 +1,496 @@
+<html>
+  <head>
+	  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>i5ting_ztree_toc:README</title>
+		<link href="toc/style/github-bf51422f4bb36427d391e4b75a1daa083c2d840e.css" media="all" rel="stylesheet" type="text/css"/>
+		<link href="toc/style/github2-d731afd4f624c99a4b19ad69f3083cd6d02b81d5.css" media="all" rel="stylesheet" type="text/css"/>
+		<link href="toc/css/zTreeStyle/zTreeStyle.css" media="all" rel="stylesheet" type="text/css"/>
+	  <style>
+		pre {
+		    counter-reset: line-numbering;
+		    border: solid 1px #d9d9d9;
+		    border-radius: 0;
+		    background: #fff;
+		    padding: 0;
+		    line-height: 23px;
+		    margin-bottom: 30px;
+		    white-space: pre;
+		    overflow-x: auto;
+		    word-break: inherit;
+		    word-wrap: inherit;
+		}
+
+		pre a::before {
+		  content: counter(line-numbering);
+		  counter-increment: line-numbering;
+		  padding-right: 1em; /* space after numbers */
+		  width: 25px;
+		  text-align: right;
+		  opacity: 0.7;
+		  display: inline-block;
+		  color: #aaa;
+		  background: #eee;
+		  margin-right: 16px;
+		  padding: 2px 10px;
+		  font-size: 13px;
+		  -webkit-touch-callout: none;
+		  -webkit-user-select: none;
+		  -khtml-user-select: none;
+		  -moz-user-select: none;
+		  -ms-user-select: none;
+		  user-select: none;
+		}
+
+		pre a:first-of-type::before {
+		  padding-top: 10px;
+		}
+
+		pre a:last-of-type::before {
+		  padding-bottom: 10px;
+		}
+
+		pre a:only-of-type::before {
+		  padding: 10px;
+		}
+
+		.highlight { background-color: #ffffcc } /* RIGHT */
+		</style>
+  </head>
+  <body>
+	  <div>
+				<div style='width:25%;'>
+						<ul id="tree" class="ztree" style='width:100%'>
+
+						</ul>
+				</div>
+        <div id='readme' style='width:70%;margin-left:20%;'>
+          	<article class='markdown-body'>
+            	<h2 id="-">说明</h2>
+<ul>
+<li>这个todoMVC-template 截至2017-7-8，通过<code>npm install</code>下载的css样式还是有问题，建议大家直接用我提供的样式即可</li>
+<li>遇到bug,多检查一下自己是不是少写或漏写了啥，是不是单词写错了，这种出错误的可能性很高</li>
+<li>如果有兴趣的同学，可以想办法把这个项目一步一步的写成vue,react.js的版本,甚至jq的版本 ^_^</li>
+</ul>
+<h2 id="-">需求分析</h2>
+<ul>
+<li>见视频</li>
+<li>自己用鼠标操作一把</li>
+</ul>
+<h2 id="-">功能说明</h2>
+<ul>
+<li>和视频中保持一致，没有标准答案</li>
+</ul>
+<h2 id="-">任务展示</h2>
+<ul>
+<li>分析需求：想办法把ul&gt;li的列表展示出来</li>
+<li>一开始如果没有数据没办法玩，就和ajax一样，先构造一些假数据，后期再把假数据去掉，换成真的数据</li>
+<li>根据双向数据绑定的原理，看到列表，我们要能想到的是数组 --&gt; 观察页面上的数据，自己想一下应该如何构造出来这个列表 --&gt; 任务有名字、有是否完成 --&gt; {name:&#39;xxx&#39;,completed:true} --&gt; 为了以后便于在数据库中存，我们多加一个属性id(这块想不到没关系，我们真实的数据一般的是后台给我们的) --&gt; 把数据通过ng-repeat展示出来<h3 id="-">关键代码：</h3>
+</li>
+</ul>
+<pre><code class="lang-javascript">$scope.todos = [
+    {id:1,name:&#39;吃饭&#39;,completed:true},
+    {id:2,name:&#39;睡觉&#39;,completed:true},
+    {id:3,name:&#39;打豆豆&#39;,completed:false},
+    {id:4,name:&#39;学习&#39;,completed:true},
+    {id:5,name:&#39;喝水&#39;,completed:false}
+];
+</code></pre>
+<p>这块有的同学会有疑问，为什么一定要id,这个从二方面来说明，第一方面，我们其实不加id是可以的，我们可以考虑用$index来替代，另一方面，我们加了id有一个好处，大家如果看过mysql数据库里面的数据就知道，一般一条数据记录都会带有一个id的，这样写是为了后面更容易和后台进行对接</p>
+<pre><code class="lang-html">&lt;li ng-repeat=&quot;item in todos&quot;&gt;
+    &lt;div class=&quot;view&quot;&gt;
+        &lt;input class=&quot;toggle&quot; type=&quot;checkbox&quot;&gt;
+        &lt;label&gt;{{item.name}}&lt;/label&gt;
+        &lt;button class=&quot;destroy&quot;&gt;&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;input class=&quot;edit&quot; value=&quot;Rule the web&quot;&gt;
+&lt;/li&gt;
+</code></pre>
+<h2 id="-">任务添加</h2>
+<ul>
+<li>分析需求：当我们按住回车的时候，会发现数据添加到了列表当中 <ol>
+<li>如何确定啥时候我们按住了回车 --&gt; 方式一：用事件对象 方式二：用ng-submit(利用了表单提交的特性,见补充代码/代码表单提交特性.html)</li>
+<li>新的任务添加到列表当中 --&gt; 根据双向数据绑定的原理，本质上其实是添加到数组当中了 --&gt; 我们需要再构造一个新的数组项 --&gt; 这个新的数组项的值好确定，是否完成也好确定(百分百是未完成)，id的话如何确定?(随便来一个，就用Math.random()当然不是特别好，有可能会出现重复，但可能性其实也不是很大) --&gt; push进去 </li>
+</ol>
+</li>
+<li>测试代码，发现有二个bug:<ol>
+<li>bug1:添加新任务的表单应该清空 --&gt; </li>
+<li>bug2:当新任务的表单控件是空的情况下，仍然可以按回车</li>
+</ol>
+</li>
+</ul>
+<h3 id="-">关键代码：</h3>
+<pre><code class="lang-html">&lt;form ng-submit=&quot;add()&quot;&gt;
+    &lt;input ng-model=&quot;newTodo&quot; class=&quot;new-todo&quot; placeholder=&quot;What needs to be done?&quot; autofocus&gt;
+&lt;/form&gt;
+</code></pre>
+<pre><code class="lang-javascript">$scope.newTodo=&#39;&#39;  // ng-model
+    $scope.add = function(){
+      // 判断newTodo是否为空，为空则不添加任务
+      if(!$scope.newTodo){
+        return
+      }
+
+      // 把新任务添加到$scope.todos中去
+      $scope.todos.push({
+        id:Math.random(),
+        name:$scope.newTodo,
+        completed:false
+      })
+      // 置空
+      $scope.newTodo=&#39;&#39;
+    }
+</code></pre>
+<h3 id="-">补充</h3>
+<ul>
+<li>大家可以考虑使用事件对象($event --&gt; keyCode的值是13的时候意味着你点击的是回车,见补充代码/angular事件对象.html) --&gt; 来实现这个功能</li>
+</ul>
+<h2 id="-">删除任务</h2>
+<ul>
+<li>分析需求：当我们点击每一项的x的时候，就会把当前的删除掉<ol>
+<li>根据双向数据绑定的原理，把当前的这一项删掉，意味着数组中少了一项</li>
+<li>我们点击的是页面中的每一项，如何确保我们要把对应的数组这一项删掉?<ul>
+<li>思路一：把id传过来，然后遍历数组，看谁的id刚好相等</li>
+<li>思路二：通过把$index传过来</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="-">关键代码：</h3>
+<pre><code class="lang-html">&lt;li ng-repeat=&quot;item in todos&quot;&gt;
+    &lt;div class=&quot;view&quot;&gt;
+        &lt;input class=&quot;toggle&quot; type=&quot;checkbox&quot;&gt;
+        &lt;label&gt;{{item.name}}&lt;/label&gt;
+        &lt;button class=&quot;destroy&quot; ng-click=&quot;remove(item.id)&quot;&gt;&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;input class=&quot;edit&quot; value=&quot;Rule the web&quot;&gt;
+&lt;/li&gt;
+</code></pre>
+<pre><code class="lang-javascript">//删除任务
+$scope.remove = function(id){
+    // 根据id到数组$scope.todos中查找相应元素，并删除
+    for (var i = 0; i &lt; $scope.todos.length; i++) {
+    var item = $scope.todos[i]
+    if(item.id === id){
+        $scope.todos.splice(i,1) // 删除数据
+        return
+    }
+    }
+}
+</code></pre>
+<h2 id="-">修改任务</h2>
+<ul>
+<li>分析需求：双击的时候，当前的任务变成了一个文本框<ol>
+<li>ng-dblclick</li>
+<li>这个神奇的效果本质：有二个标签，一个是label,一个是input,如果是平时，label显示，如果是编辑的时候，input显示 --&gt; 对应的editing类名</li>
+<li>一说到类名，我们会想起ng-class --&gt; {editing:true或者false} --&gt; 在页面上玩一下 --&gt; 当然这个true或者false不能写死</li>
+<li>我们看一下刚才做的删除任务，利用的是传过去id值 --&gt; 我们修改任务其实也是可以传过去id的 --&gt; 如何才能构造出来一个true或false? --&gt; 传进去的id的值和当前的item.id进行比较 --&gt; 如何确保一开始的时候这个isEditingId的值不和任何任务的id相等 -&gt; 设置成-1</li>
+<li>如何当我们按回车的时候，变回非编辑状态 --&gt; 根据新添加任务做的，我们用同样的思路(ng-submit) --&gt; 事实上，只要把isEditingId的值变成-1就可以</li>
+</ol>
+</li>
+</ul>
+<h3 id="-">关键代码：</h3>
+<pre><code class="lang-html">&lt;li ng-repeat=&quot;item in todos&quot; ng-class=&quot;{editing:isEditingId == item.id}&quot;&gt;
+    &lt;div class=&quot;view&quot;&gt;
+        &lt;input class=&quot;toggle&quot; type=&quot;checkbox&quot;&gt;
+        &lt;label ng-dblclick=&quot;edit(item.id)&quot;&gt;{{item.name}}&lt;/label&gt;
+        &lt;button class=&quot;destroy&quot; ng-click=&quot;remove(item.id)&quot;&gt;&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;form ng-submit=&quot;save()&quot;&gt;
+        &lt;input class=&quot;edit&quot; value=&quot;Rule the web&quot; ng-model=&quot;item.name&quot;&gt;
+    &lt;/form&gt;
+&lt;/li&gt;
+</code></pre>
+<pre><code class="lang-javascript">//修改任务
+$scope.isEditingId = -1
+$scope.edit = function(id){
+    $scope.isEditingId = id
+}
+
+// 只是改变也文本框的编辑状态
+$scope.save = function(){
+    $scope.isEditingId = -1
+}
+</code></pre>
+<h2 id="-">切换任务状态</h2>
+<ul>
+<li>需求分析：当点击当前任务的时候，当前的任务状态由已完成变成未完成，或者未完成变成已完成<ol>
+<li>我们点击的是input[type=&quot;checkbox&quot;],我们根据前面学习的知识知道，input[type=&quot;checkbox&quot;]的值是true或者false</li>
+<li>我们观察发现右侧的列表的样式在发生变化，其实就是给父级元素添加一个completed的类名 --&gt; 一说到类名，我们可以想到用ng-class</li>
+<li>刚好input[type=&quot;checkbox&quot;]的值也是true和false,所以，我们直接让checkbox和右侧的label对应的类名是一个数据模型</li>
+</ol>
+</li>
+</ul>
+<h3 id="-">关键代码：</h3>
+<pre><code class="lang-html">&lt;li ng-repeat=&quot;item in todos&quot; ng-class=&quot;{editing:isEditingId == item.id,completed:item.completed}&quot;&gt;
+    &lt;div class=&quot;view&quot;&gt;
+        &lt;input class=&quot;toggle&quot; type=&quot;checkbox&quot; ng-model=&quot;item.completed&quot;&gt;
+        &lt;label ng-dblclick=&quot;edit(item.id)&quot;&gt;{{item.name}}&lt;/label&gt;
+        &lt;button class=&quot;destroy&quot; ng-click=&quot;remove(item.id)&quot;&gt;&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;form ng-submit=&quot;save()&quot;&gt;
+        &lt;input class=&quot;edit&quot; value=&quot;Rule the web&quot; ng-model=&quot;item.name&quot;&gt;
+    &lt;/form&gt;
+&lt;/li&gt;
+</code></pre>
+<h2 id="-">批量切换任务状态</h2>
+<ul>
+<li>当点击最上面的checkbox的时候，所有的任务批量切换已完成和未完成的状态<ol>
+<li>checkbox对应的ng-model的值是true或false</li>
+<li>下面所有的任务只要改变item.completed的值都是true或false则实现效果</li>
+<li>所以，我们考虑给最上面的checkbox添加一个事件(ng-change,当值变化的时候触发),当触发的时候，我们对数据模型中的数组做一个遍历，让每一项的值都同步为true或false</li>
+</ol>
+</li>
+</ul>
+<h3 id="-">关键代码</h3>
+<pre><code class="lang-html">&lt;input class=&quot;toggle-all&quot; type=&quot;checkbox&quot; ng-change=&quot;toggleAll()&quot;
+                ng-model=&quot;selectAll&quot;&gt;
+</code></pre>
+<pre><code class="lang-javascript">$scope.selectAll = false
+$scope.toggleAll = function(){
+    // 让$scope.todos中所有数据的completed值等于$scope.selectAll
+    for (var i = 0; i &lt; $scope.todos.length; i++) {
+    var item = $scope.todos[i]
+    item.completed = $scope.selectAll
+    }
+}
+</code></pre>
+<h2 id="-">显示未完成任务数</h2>
+<h3 id="-n-">见代码《补充代码/加法计算器实现的N种方法》的分析，理解：如果一个表达式是由多个别的数据模型或者是某个函数(返回值由多个别的数据模型运算结果运算而来)的返回值的话，当这些多个别的数据模型的值发生变化的时候，也会重新刷新一下当前这个表达式的值</h3>
+<ul>
+<li>需求分析：当我们切换任务状态的时候，我们发现未完成任务数在跟着发生变化<ol>
+<li>我们计算出来未完成的任务数其实很简单，我们只需要计算出来数据模型中的数组中未完成任务的数量即可</li>
+<li>所以，我们考虑在这块放一个函数的返回值</li>
+</ol>
+</li>
+</ul>
+<h3 id="-">关键代码：</h3>
+<pre><code class="lang-html">&lt;span class=&quot;todo-count&quot;&gt;&lt;strong&gt;{{getActive()}}&lt;/strong&gt; item left&lt;/span&gt;
+</code></pre>
+<pre><code class="lang-javascript">$scope.getActive = function(){
+    var count = 0
+    // 遍历$scope.todos, 找到所有completed属性值为false的数据
+    for (var i = 0; i &lt; $scope.todos.length; i++) {
+        var item = $scope.todos[i]
+        if(!item.completed){
+            count++
+        }
+    }
+    return count
+}
+</code></pre>
+<h2 id="-">清除所有已完成任务数</h2>
+<ul>
+<li>当我们点击clear completed的时候，我们发现，任务列表中已完成的任务会被删除<ol>
+<li>给clear completed这个按钮添加ng-click</li>
+<li>当点击触发的时候，我们<h3 id="-">关键代码：</h3>
+<pre><code class="lang-html">&lt;button class=&quot;clear-completed&quot; ng-click=&quot;clearAll()&quot;&gt;Clear completed&lt;/button&gt;
+</code></pre>
+</li>
+</ol>
+</li>
+</ul>
+<pre><code class="lang-javascript">$scope.clearAll = function(){
+    for (var i = $scope.todos.length - 1; i &gt;= 0; i--) {
+        // true(0),false(1),false(2)
+        var item = $scope.todos[i]
+        if(item.completed){
+        $scope.todos.splice(i,1)
+        }
+    }
+}
+</code></pre>
+<h2 id="-filter-">使用filter实现切换不同状态任务的显示</h2>
+<ul>
+<li>需求分析：当我们点击all,completed,active的时候，我们发现任务列表在进行切换<ol>
+<li>思考：我们能不能参考clear completed的思路来实现? ---&gt; 不可以，因为我们如果真的在点击active的时候，把completed的全部删除了，那么我们再点击回来的时候，就点击不回来了</li>
+<li>针对这种情况，我们考虑使用angular的过滤器来实现</li>
+</ol>
+</li>
+</ul>
+<h2 id="filter-">filter过滤器的使用(只讲数组过滤数据中的模糊匹配和精确匹配)</h2>
+<p>见《补充代码/filter过滤器的使用》</p>
+<h3 id="-">关键代码：</h3>
+<pre><code class="lang-html">&lt;li ng-repeat=&quot;item in todos | filter : isCompleted&quot; ng-class=&quot;{editing:isEditingId == item.id,completed:item.completed}&quot;&gt;
+</code></pre>
+<pre><code class="lang-javascript">//切换不同状态任务的显示
+$scope.isCompleted = {};//filter过滤器的过滤条件
+//显示未完成的任务
+$scope.active = function(){
+    $scope.isCompleted = {completed:false}
+}
+
+// 显示已完成任务
+$scope.completed = function(){
+    $scope.isCompleted = {completed:true}
+}
+
+//显示所有的任务
+$scope.all = function(){
+    $scope.isCompleted = {}
+}
+</code></pre>
+<h2 id="-">切换不同状态焦点状态样式的操作</h2>
+<ol>
+<li>点击显示已完成的任务，当前有selected类名样式，其他二个没有</li>
+<li>一说到样式，我们会想起来ng-class</li>
+<li>我们必须在ng-class里面构造出来一个布尔值</li>
+</ol>
+<h3 id="-">关键代码：</h3>
+<pre><code class="lang-html">&lt;ul class=&quot;filters&quot;&gt;
+    &lt;li&gt;
+        &lt;a ng-class=&quot;{selected:isCompleted.completed==undefined}&quot; href=&quot;#/&quot; ng-click=&quot;all()&quot;&gt;All&lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;a ng-class=&quot;{selected:isCompleted.completed==false}&quot; href=&quot;#/active&quot; ng-click=&quot;active()&quot;&gt;Active&lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;a ng-class=&quot;{selected:isCompleted.completed==true}&quot; href=&quot;#/completed&quot; ng-click=&quot;completed()&quot;&gt;Completed&lt;/a&gt;
+    &lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<h2 id="-watch-">通过$watch监视锚点值的变化来切换不同状态任务的显示与否</h2>
+<ul>
+<li>观察我们做的和官网上的，发现有区别：官网上面当点击all,completed,active的时候，url中的hash锚点值在发生变化，并且当我们把官网上的url拷贝到一个新的标签的时候，按回车，如果hash值是active,则显示的是active状态，所以，我们要改造《使用filter实现切换不同状态任务的显示》这一步中的通过ng-click实现的状态任务的切换</li>
+<li>思考：我们如何才能根据锚点(hash)值的变化进行不同状态任务的切换呢? --&gt; 回忆一下我们在第一天讲angular.js的时候，用原生的js实现的spa的小demo --&gt; 我们需要监听hash值的变化，当发生变化的时候，我们改变$scope.isCompleted的值，只不过，我们这里不是用的hashchange事件，而是利用的$location(参考代码《补充代码/$location.html》) + angular的监视$watch来实现(参考代码《补充代码/》)</li>
+</ul>
+<h3 id="-">关键代码：</h3>
+<pre><code class="lang-html">&lt;ul class=&quot;filters&quot;&gt;
+    &lt;li&gt;
+        &lt;a ng-class=&quot;{selected:isCompleted.completed==undefined}&quot; href=&quot;#/&quot;&gt;All&lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;a ng-class=&quot;{selected:isCompleted.completed==false}&quot; href=&quot;#/active&quot; &gt;Active&lt;/a&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+        &lt;a ng-class=&quot;{selected:isCompleted.completed==true}&quot; href=&quot;#/completed&quot;&gt;Completed&lt;/a&gt;
+    &lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<pre><code class="lang-javascript">myApp.controller(&#39;myController&#39;,[&#39;$scope&#39;,&#39;$location&#39;,function($scope,$location){
+</code></pre>
+<pre><code class="lang-javascript">//切换不同状态任务的显示
+    $scope.isCompleted = {};//filter过滤器的过滤条件
+    //显示未完成的任务
+    // $scope.active = function(){
+    //     $scope.isCompleted = {completed:false}
+    // }
+
+    // // 显示已完成任务
+    // $scope.completed = function(){
+    //     $scope.isCompleted = {completed:true}
+    // }
+
+    // //显示所有的任务
+    // $scope.all = function(){
+    //     $scope.isCompleted = {}
+    // }
+
+    $scope.loca = $location
+    $scope.$watch(&#39;loca.url()&#39;,function(now, old){
+      switch(now){
+        case &#39;/active&#39;:
+        $scope.isCompleted = {completed:false}
+        break;
+        case &#39;/completed&#39;:
+        $scope.isCompleted = {completed:true}
+        break;
+        default:
+        $scope.isCompleted = {}
+      }
+    })
+</code></pre>
+<h2 id="-service">提取控制器的代码到service</h2>
+<p>见《补充代码/理解service》</p>
+<h2 id="-">抽取获取数据及添加数据功能</h2>
+<ul>
+<li>注意：我们当前的代码写到这个程度其实已经可以了，下面的所谓的提取到service只不过是为了让我们熟悉和了解service这个概念</li>
+<li>提取到服务的原则<ul>
+<li>哪些东西可以被复用?</li>
+<li>当前的项目中涉及到的数据来自哪里? --&gt; localStorage --&gt; 对localStorage的在任何控制器里面都可以使用 --&gt; 把对localStorage中的数据的各种操作提取出来</li>
+</ul>
+</li>
+</ul>
+<h3 id="-">关键代码</h3>
+<pre><code class="lang-html">&lt;script src=&quot;./libs/angular.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;./js/service.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;js/app.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<pre><code class="lang-javascript">(function(angular){
+
+  // 1.创建服务模块
+  var app = angular.module(&#39;service&#39;,[])
+
+  // 2.创建服务
+  // 第一个参数：服务的名字
+  // 第二个参数里的function: 
+  //    angular会把这个function当作构建函数，angular会帮助我们new这个构建函数，然后得到一个对象。A,B
+  app.service(&#39;MyService&#39;, [&#39;$window&#39;,function($window){
+    // console.log($window === window);
+    var str = $window.localStorage.getItem(&#39;mytodos&#39;)|| &#39;[]&#39;
+    var todos  = JSON.parse(str);
+
+    // 1.返回任务数据
+    this.get = function(){
+      return todos
+    }
+
+    // 2.添加数据
+    this.add = function(newTodo){
+       // 把新任务添加到todos中去
+      todos.push({
+        id:Math.random(),
+        name:newTodo,
+        completed:false
+      })
+
+      var str = JSON.stringify(todos);
+      $window.localStorage.setItem(&#39;mytodos&#39;,str);
+    }
+
+  }])
+})(angular)
+</code></pre>
+<pre><code class="lang-javascript">ar myApp = angular.module(&#39;myApp&#39;,[&#39;service&#39;]);
+    myApp.controller(&#39;myController&#39;,[&#39;$scope&#39;,&#39;$location&#39;,&#39;MyService&#39;,function($scope,$location,MyService){
+        //要展示的任务数据
+        $scope.todos = MyService.get();
+
+        //添加任务
+        $scope.newTodo=&#39;&#39;  // ng-model
+        $scope.add = function(){
+            // 判断newTodo是否为空，为空则不添加任务
+            if(!$scope.newTodo){
+                return
+            }
+
+            // 把新任务添加到$scope.todos中去
+            MyService.add($scope.newTodo);
+
+            // 置空
+            $scope.newTodo=&#39;&#39;
+        }
+</code></pre>
+<h2 id="-">抽取删除数据及批量切换任务状态功能</h2>
+
+          	</article>
+        </div>
+		</div>
+  </body>
+</html>
+<script type="text/javascript" src="toc/js/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="toc/js/jquery.ztree.all-3.5.min.js"></script>
+<script type="text/javascript" src="toc/js/ztree_toc.js"></script>
+<script type="text/javascript" src="toc_conf.js"></script>
+
+<SCRIPT type="text/javascript" >
+<!--
+$(document).ready(function(){
+    var css_conf = eval(markdown_panel_style);
+    $('#readme').css(css_conf)
+    
+    var conf = eval(jquery_ztree_toc_opts);
+		$('#tree').ztree_toc(conf);
+});
+//-->
+</SCRIPT>
