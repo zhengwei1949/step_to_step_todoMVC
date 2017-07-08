@@ -196,6 +196,23 @@ $scope.toggleAll = function(){
     2. 所以，我们考虑在这块放一个函数的返回值
 
 ### 关键代码：
+```html
+<span class="todo-count"><strong>{{getActive()}}</strong> item left</span>
+```
+
+```javascript
+$scope.getActive = function(){
+    var count = 0
+    // 遍历$scope.todos, 找到所有completed属性值为false的数据
+    for (var i = 0; i < $scope.todos.length; i++) {
+        var item = $scope.todos[i]
+        if(!item.completed){
+            count++
+        }
+    }
+    return count
+}
+```
 
 ## 清除所有已完成任务数
 - 当我们点击clear completed的时候，我们发现，任务列表中已完成的任务会被删除

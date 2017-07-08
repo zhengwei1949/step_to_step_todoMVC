@@ -55,13 +55,25 @@
 	}
 
 	$scope.selectAll = false
-    $scope.toggleAll = function(){
-      // 让$scope.todos中所有数据的completed值等于$scope.selectAll
-      for (var i = 0; i < $scope.todos.length; i++) {
-        var item = $scope.todos[i]
-        item.completed = $scope.selectAll
-      }
-    }
+	$scope.toggleAll = function(){
+		// 让$scope.todos中所有数据的completed值等于$scope.selectAll
+		for (var i = 0; i < $scope.todos.length; i++) {
+			var item = $scope.todos[i]
+			item.completed = $scope.selectAll
+		}
+	}
+
+	$scope.getActive = function(){
+		var count = 0
+		// 遍历$scope.todos, 找到所有completed属性值为false的数据
+		for (var i = 0; i < $scope.todos.length; i++) {
+			var item = $scope.todos[i]
+			if(!item.completed){
+				count++
+			}
+		}
+		return count
+	}
 		
 	}]);
 })(angular);
