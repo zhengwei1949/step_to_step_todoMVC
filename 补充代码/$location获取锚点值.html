@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body ng-app="myApp" ng-controller="myController">
+    <script src="./libs/angular.js"></script>
+    <script>
+        var myApp = angular.module('myApp',[]);
+        myApp.controller('myController',['$scope','$location',function($scope,$location){
+            // 如何实验：在url地址栏中输入：$location.html#/a，并按ctrl + R刷新，注意直接回车没用的
+            console.log($location.url());
+        }]);
+    </script>
+</body>
+</html>

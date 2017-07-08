@@ -288,8 +288,61 @@ $scope.all = function(){
 ```
 
 ## 通过$watch监视锚点值的变化来切换不同状态任务的显示与否
+- 观察我们做的和官网上的，发现有区别：官网上面当点击all,completed,active的时候，url中的hash锚点值在发生变化，并且当我们把官网上的url拷贝到一个新的标签的时候，按回车，如果hash值是active,则显示的是active状态，所以，我们要改造《使用filter实现切换不同状态任务的显示》这一步中的通过ng-click实现的状态任务的切换
+- 思考：我们如何才能根据锚点(hash)值的变化进行不同状态任务的切换呢? --> 回忆一下我们在第一天讲angular.js的时候，用原生的js实现的spa的小demo --> 我们需要监听hash值的变化，当发生变化的时候，我们改变$scope.isCompleted的值，只不过，我们这里不是用的hashchange事件，而是利用的$location(参考代码《补充代码/$location.html》) + angular的监视$watch来实现(参考代码《补充代码/》)
 
 ### 关键代码：
+```html
+<ul class="filters">
+    <li>
+        <a ng-class="{selected:isCompleted.completed==undefined}" href="#/">All</a>
+    </li>
+    <li>
+        <a ng-class="{selected:isCompleted.completed==false}" href="#/active" >Active</a>
+    </li>
+    <li>
+        <a ng-class="{selected:isCompleted.completed==true}" href="#/completed">Completed</a>
+    </li>
+</ul>
+```
+
+
+```javascript
+myApp.controller('myController',['$scope','$location',function($scope,$location){
+```
+
+```javascript
+//切换不同状态任务的显示
+	$scope.isCompleted = {};//filter过滤器的过滤条件
+	//显示未完成的任务
+	// $scope.active = function(){
+	// 	$scope.isCompleted = {completed:false}
+	// }
+
+	// // 显示已完成任务
+	// $scope.completed = function(){
+	// 	$scope.isCompleted = {completed:true}
+	// }
+
+	// //显示所有的任务
+	// $scope.all = function(){
+	// 	$scope.isCompleted = {}
+	// }
+
+	$scope.loca = $location
+    $scope.$watch('loca.url()',function(now, old){
+      switch(now){
+        case '/active':
+        $scope.isCompleted = {completed:false}
+        break;
+        case '/completed':
+        $scope.isCompleted = {completed:true}
+        break;
+        default:
+        $scope.isCompleted = {}
+      }
+    })
+```
 
 ## 提取控制器的代码到service
 
