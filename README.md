@@ -419,4 +419,5 @@ ar myApp = angular.module('myApp',['service']);
 		}
 ```
 
+## 抽取删除数据及批量切换任务状态功能
 
