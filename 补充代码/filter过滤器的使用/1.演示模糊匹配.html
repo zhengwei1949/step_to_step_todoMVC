@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>演示模糊匹配</title>
+</head>
+<body ng-app="myApp" ng-controller="myController">
+    <input type="text" ng-model="filterKeyWords">
+    <ul>
+        <li ng-repeat="item in arr | filter : filterKeyWords">
+            <h3>{{item.title}}</h3>
+            <p>{{item.desc}}</p>
+        </li>
+    </ul>
+    <script src="../libs/angular.js"></script>
+    <script>
+        var myApp = angular.module('myApp',[]);
+        myApp.controller('myController',['$scope',function($scope){
+            $scope.arr = [
+                {title:'我是文章的标题',desc:'我是文章的内容'},
+                {title:'习近平主持金砖国家领导人非正式会晤',desc:'新华社德国汉堡7月7日电（记者霍小光　蒋国鹏　刘畅）国家主席习近平7日在汉堡主持金砖国家领导人非正式会晤，发表引导性讲话和总结讲话。南非总统祖马、巴西总统特梅尔、俄罗斯总统普京、印度总理莫迪出席。5国领导人围绕世界政治经济形势和二十国集团重点议题深入交换意见，就金砖国家加强团结协作、合力构建开放型世界经济、完善全球经济治理、促进可持续发展达成重要共识。'},
+                {title:'李克强主持召开经济形势专家和企业家座谈会',desc:'7月6日，中共中央政治局常委、国务院总理李克强主持召开经济形势专家和企业家座谈会，分析研究当前经济运行情况，听取对下一步经济工作的意见建议。'},
+                {title:'公积金账随人走 这1.3亿人换城市工作买房方便了',desc:'中新网北京7月8日电7月起，住房公积金异地转移接续业务在全国范围内实现“账随人走，钱随账走”。记者咨询多地住房公积金管理中心得知，除在转入地提供原缴存账号等信息外，个人在转出地无需再办理任何手续。对换城市就业、及要在新城市用公积金贷款买房的人来说可节省不少时间和资金成本。'},
+                {title:'特朗普与普京首次正式会晤 持续两个多小时超计划',desc:'据中新社7月7日汉堡电，美国总统特朗普7日下午在G20汉堡峰会期间会晤俄罗斯总统普京，这是特朗普上任之后首次面对面地与普京进行交流。两位总统之间的会晤持续了两个多小时，大大超出了此前的计划。'}
+            ]
+        }]);
+    </script>
+</body>
+</html>

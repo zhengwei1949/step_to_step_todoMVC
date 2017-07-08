@@ -219,6 +219,21 @@ $scope.getActive = function(){
     1. 给clear completed这个按钮添加ng-click
     2. 当点击触发的时候，我们
 ### 关键代码：
+```html
+<button class="clear-completed" ng-click="clearAll()">Clear completed</button>
+```
+
+```javascript
+$scope.clearAll = function(){
+    for (var i = $scope.todos.length - 1; i >= 0; i--) {
+        // true(0),false(1),false(2)
+        var item = $scope.todos[i]
+        if(item.completed){
+        $scope.todos.splice(i,1)
+        }
+    }
+}
+```
 
 ## 使用filter实现切换不同状态任务的显示
 - 需求分析：当我们点击all,completed,active的时候，我们发现任务列表在进行切换
@@ -226,7 +241,7 @@ $scope.getActive = function(){
     2. 针对这种情况，我们考虑使用angular的过滤器来实现
 
 ## filter过滤器的使用(只讲数组过滤数据中的模糊匹配和精确匹配)
-### 关键代码：
+见《补充代码/filter过滤器的使用》
 
 ## 切换不同状态焦点状态样式的操作
 
