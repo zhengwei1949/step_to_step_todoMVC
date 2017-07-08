@@ -1,0 +1,6 @@
+- npm --> 迅雷
+- npmjs.com --> 种子网站
+- package.json --> 种子
+- npm install 库或框架名 --save --> 存到package.json当中
+- gulp.task,gulp.src,gulp.dest,gulp.watch,gulp.run
+- 理解gulp的插件的玩法套路
