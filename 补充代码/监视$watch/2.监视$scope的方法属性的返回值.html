@@ -7,13 +7,19 @@
     <title>Document</title>
 </head>
 <body ng-app="myApp" ng-controller="myController">
-    <input type="text" ng-model="abc">
+    <input type="text" ng-model="a">
+    <input type="text" ng-model="b">
+    <p>{{getResult()}}</p>
     <script src="../libs/angular.js"></script>
     <script>
         var myApp = angular.module('myApp',[]);
         myApp.controller('myController',['$scope',function($scope){
-            $scope.abc = 0;
-            $scope.$watch('abc',function(prev,now){
+            $scope.a = 0;
+            $scope.b = 0;
+            $scope.getResult = function(){
+                return Number($scope.a) + Number($scope.b);
+            }
+            $scope.$watch('getResult()',function(prev,now){
                 console.log(prev,now);
                 console.log('==============');
             });

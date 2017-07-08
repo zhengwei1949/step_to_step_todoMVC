@@ -7,13 +7,12 @@
     <title>Document</title>
 </head>
 <body ng-app="myApp" ng-controller="myController">
-    <input type="text" ng-model="abc">
     <script src="../libs/angular.js"></script>
     <script>
         var myApp = angular.module('myApp',[]);
-        myApp.controller('myController',['$scope',function($scope){
-            $scope.abc = 0;
-            $scope.$watch('abc',function(prev,now){
+        myApp.controller('myController',['$scope','$location',function($scope,$location){
+            $scope.local = $location;
+            $scope.$watch('local.url()',function(prev,now){
                 console.log(prev,now);
                 console.log('==============');
             });
