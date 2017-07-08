@@ -42,7 +42,7 @@ $scope.todos = [
 
 ## 任务添加 
 - 分析需求：当我们按住回车的时候，会发现数据添加到了列表当中 
-    1. 如何确定啥时候我们按住了回车 --> 方式一：用事件对象 方式二：用ng-submit(利用了表单提交的特性)
+    1. 如何确定啥时候我们按住了回车 --> 方式一：用事件对象 方式二：用ng-submit(利用了表单提交的特性,见补充代码/代码表单提交特性.html)
     2. 新的任务添加到列表当中 --> 根据双向数据绑定的原理，本质上其实是添加到数组当中了 --> 我们需要再构造一个新的数组项 --> 这个新的数组项的值好确定，是否完成也好确定(百分百是未完成)，id的话如何确定?(随便来一个，就用Math.random()当然不是特别好，有可能会出现重复，但可能性其实也不是很大) --> push进去 
 - 测试代码，发现有二个bug:
     1. bug1:添加新任务的表单应该清空 --> 
@@ -76,7 +76,7 @@ $scope.newTodo=''  // ng-model
 ```
 
 ### 补充
-- 大家可以考虑使用事件对象($event --> keyCode的值是13的时候意味着你点击的是回车) --> 来实现这个功能
+- 大家可以考虑使用事件对象($event --> keyCode的值是13的时候意味着你点击的是回车,见补充代码/angular事件对象.html) --> 来实现这个功能
 
 ## 删除任务
 - 分析需求：当我们点击每一项的x的时候，就会把当前的删除掉
@@ -86,6 +86,30 @@ $scope.newTodo=''  // ng-model
         + 思路二：通过把$index传过来
 
 ### 关键代码：
+```html
+<li ng-repeat="item in todos">
+    <div class="view">
+        <input class="toggle" type="checkbox">
+        <label>{{item.name}}</label>
+        <button class="destroy" ng-click="remove(item.id)"></button>
+    </div>
+    <input class="edit" value="Rule the web">
+</li>
+```
+
+```javascript
+//删除任务
+$scope.remove = function(id){
+    // 根据id到数组$scope.todos中查找相应元素，并删除
+    for (var i = 0; i < $scope.todos.length; i++) {
+    var item = $scope.todos[i]
+    if(item.id === id){
+        $scope.todos.splice(i,1) // 删除数据
+        return
+    }
+    }
+}
+```
 
 ## 修改任务
 - 分析需求：双击的时候，当前的任务变成了一个文本框
@@ -96,6 +120,31 @@ $scope.newTodo=''  // ng-model
     4. 如何当我们按回车的时候，变回非编辑状态 --> 根据新添加任务做的，我们用同样的思路(ng-submit) --> 事实上，只要把isEditingId的值变成-1就可以
 
 ### 关键代码：
+```html
+<li ng-repeat="item in todos" ng-class="{editing:isEditingId == item.id}">
+    <div class="view">
+        <input class="toggle" type="checkbox">
+        <label ng-dblclick="edit(item.id)">{{item.name}}</label>
+        <button class="destroy" ng-click="remove(item.id)"></button>
+    </div>
+    <form ng-submit="save()">
+        <input class="edit" value="Rule the web" ng-model="item.name">
+    </form>
+</li>
+```
+
+```javascript
+//修改任务
+$scope.isEditingId = -1
+$scope.edit = function(id){
+    $scope.isEditingId = id
+}
+
+// 只是改变也文本框的编辑状态
+$scope.save = function(){
+    $scope.isEditingId = -1
+}
+```
 
 ## 切换任务状态
 - 需求分析：当点击当前任务的时候，当前的任务状态由已完成变成未完成，或者未完成变成已完成
