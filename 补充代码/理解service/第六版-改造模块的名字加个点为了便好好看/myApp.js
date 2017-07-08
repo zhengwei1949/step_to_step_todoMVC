@@ -1,0 +1,1 @@
+var myApp = angular.module('myApp',['myApp.controller1','myApp.controller2','myApp.service']);

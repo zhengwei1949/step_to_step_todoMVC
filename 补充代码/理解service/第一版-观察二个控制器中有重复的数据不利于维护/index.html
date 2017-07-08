@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body ng-app="myApp">
+    <div ng-controller="myController1">
+        <h3>{{school}}</h3>
+        <h4>{{subject}}</h4>
+        <p>{{lesson}}</p>
+    </div>
+    <hr>
+    <div ng-controller="myController2">
+        <h3>{{school}}</h3>
+        <h4>{{subject}}</h4>
+        <p>{{lesson}}</p>
+    </div>
+    <script src="./node_modules/angular/angular.js"></script>
+    <script>
+        var myApp = angular.module('myApp',[]);
+        myApp.controller('myController1',function($scope){
+            $scope.school = 'itcast';
+            $scope.subject = 'frontend';
+            $scope.lesson = '流行框架';
+        });
+        myApp.controller('myController2',function($scope){
+            $scope.school = 'itcast';
+            $scope.subject = 'frontend';
+            $scope.lesson = 'Node.js';
+        });
+    </script>
+</body>
+</html>
