@@ -57,21 +57,21 @@ $scope.todos = [
 
 ```javascript
 $scope.newTodo=''  // ng-model
-    $scope.add = function(){
-      // 判断newTodo是否为空，为空则不添加任务
-      if(!$scope.newTodo){
-        return
-      }
-
-      // 把新任务添加到$scope.todos中去
-      $scope.todos.push({
-        id:Math.random(),
-        name:$scope.newTodo,
-        completed:false
-      })
-      // 置空
-      $scope.newTodo=''
+$scope.add = function(){
+    // 判断newTodo是否为空，为空则不添加任务
+    if(!$scope.newTodo){
+    return
     }
+
+    // 把新任务添加到$scope.todos中去
+    $scope.todos.push({
+    id:Math.random(),
+    name:$scope.newTodo,
+    completed:false
+    })
+    // 置空
+    $scope.newTodo=''
+}
 
 ```
 
@@ -217,7 +217,7 @@ $scope.getActive = function(){
 ## 清除所有已完成任务数
 - 当我们点击clear completed的时候，我们发现，任务列表中已完成的任务会被删除
     1. 给clear completed这个按钮添加ng-click
-    2. 当点击触发的时候，我们
+    2. 当点击触发的时候，我们对数组进行遍历，把所有不符合的数据去掉
 ### 关键代码：
 ```html
 <button class="clear-completed" ng-click="clearAll()">Clear completed</button>
@@ -346,6 +346,10 @@ myApp.controller('myController',['$scope','$location',function($scope,$location)
 
 ## 提取控制器的代码到service
 见《补充代码/理解service》
+### 服务的好处
+- 可以供多个控制器公用，将来我们对数据库、localStorage中的数据的读取操作统一由服务管理
+- 由于服务是一个纯粹的构造器，不涉及到任何页面中的视图逻辑，方便我们进行代码的测试
+- 将来我们在修改页面中的视图逻辑的时候，这块的代码不需要做任何的修改
 
 ## 抽取获取数据及添加数据功能
 - 注意：我们当前的代码写到这个程度其实已经可以了，下面的所谓的提取到service只不过是为了让我们熟悉和了解service这个概念
