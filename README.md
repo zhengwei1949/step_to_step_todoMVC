@@ -21,7 +21,7 @@
 ## 技术议题包括
 - 如何将视图中的数据和view model($scope)中的数据进行映射
 - 相关指令:ng-app,ng-click,ng-change,ng-dblclick,ng-submit
-- $location.url的用法
+- $location.html的用法
 - service(服务)
 
 ## 任务展示
