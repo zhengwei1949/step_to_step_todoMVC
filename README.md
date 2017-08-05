@@ -1,3 +1,5 @@
+[最终效果](https://zhengwei1949.github.io/step_to_step_todoMVC/)
+
 ## 说明
 - 这个todoMVC-template 截至2017-7-8，通过`npm install`下载的css样式还是有问题，建议大家直接用我提供的样式即可
 - 遇到bug,多检查一下自己是不是少写或漏写了啥，是不是单词写错了，这种出错误的可能性很高
