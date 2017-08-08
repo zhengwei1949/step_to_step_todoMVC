@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <title>demo</title>
+    <style>
+        .demo input{
+            display: none;
+        }
+        .demo.editing p{
+            display: none;
+        }
+        .demo.editing input{
+            display: block;
+        }
+    </style>
+</head>
+
+<body ng-app='myApp'>
+    <div ng-controller='myController'>
+        <div class="demo" ng-class="{editing:isEditing}">
+            <input type="text" ng-model="abc" ng-keyup="save($event)">
+            <p ng-dblclick="editFn()">{{abc}}</p>
+        </div>
+    </div>
+    <script src='libs/angular.js'></script>
+    <script>
+        var app = angular.module('myApp', []);
+        app.controller('myController', function ($scope) {
+            $scope.abc = 'hello';
+            $scope.isEditing = false;
+            $scope.editFn = function(){
+                $scope.isEditing = true;
+            }
+            $scope.save = function(e){
+                // console.log(e);
+                if(e.keyCode === 13){
+                    $scope.isEditing = false;
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

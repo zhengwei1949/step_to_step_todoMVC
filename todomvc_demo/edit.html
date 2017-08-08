@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang='en'>
+    <head>
+        <meta charset='UTF-8'>
+        <title>demo</title>
+        <style>
+            .wrapper input{
+                display: none;
+            }
+            .wrapper.editing input{
+                display: block;
+            }
+            .wrapper.editing p{
+                display: none;
+            }
+        </style>
+    </head>
+    <body ng-app='myApp'>
+        <div ng-controller='myController'>
+            <div class="wrapper" ng-class="{editing:isEdit}">
+                <form ng-submit="save()">
+                    <input type="text" ng-model="item">
+                </form>
+                <p ng-dblclick="edit()">{{item}}</p>
+            </div>
+
+        </div>
+        <script src='libs/angular.js'></script>
+        <script>
+            var app = angular.module('myApp',[]);
+            app.controller('myController',function($scope){
+                $scope.item = '吃饭';
+                $scope.isEdit = false;
+                $scope.edit = function(){
+                    $scope.isEdit = true;
+                }
+                $scope.save = function(){
+                    $scope.isEdit = false;
+                }
+            })
+        
+        </script>
+    </body>
+</html> 
