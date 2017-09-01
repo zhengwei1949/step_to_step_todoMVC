@@ -1,6 +1,6 @@
 ## 最终效果
 
-:100:
+:100: :rocket: /play yeah
 
 [最终效果](https://zhengwei1949.github.io/step_to_step_todoMVC/)
 
